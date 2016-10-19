@@ -45,7 +45,7 @@ EM.run do
 
 		ws.onclose do |code, reason|
 			puts "Disconnected with status code: #{code}"
-			sleep 5
+			sleep 1
 			EM.next_tick {
 				connect
 			}

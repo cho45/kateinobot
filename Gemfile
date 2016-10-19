@@ -1,9 +1,7 @@
 source 'https://rubygems.org'
 
 gem 'sinatra'
-gem 'sinatra-contrib'
-gem 'sinatra-websocket'
-gem 'em-websocket'
+gem 'em-websocket', '~> 0.5.1'
 gem 'thin'
 
 gem 'em-websocket-client'
