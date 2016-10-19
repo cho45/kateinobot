@@ -36,7 +36,7 @@ EM.run do
 						type: 'text',
 						text: 'クライントサービス稼動中'
 					} })
-				when /(.+)って(?:喋って|しゃべって|いって|言って)/
+				when /^(.+)って(?:喋って|しゃべって|いって|言って)$/
 					msg = Regexp.last_match[1]
 					Thread.start do
 						p system('jsay.sh', msg)
