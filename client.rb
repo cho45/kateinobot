@@ -16,7 +16,6 @@ EM.run do
 
 
 	def connect
-		# ws = WebSocket::EventMachine::Client.connect(:uri => 'ws://localhost:8876/websocket', :headers => {'WS-KEY' => CONFIG[:WS_KEY]} )
 		ws = WebSocket::EventMachine::Client.connect(:uri => 'wss://cho45.stfuawsc.com/bot/websocket', :headers => {'WS-KEY' => CONFIG[:WS_KEY]} )
 
 		ws.onopen do
@@ -28,7 +27,6 @@ EM.run do
 			return unless type == :text
 			data = JSON.parse(msg)
 			p data
-			# {"type"=>"message", "replyToken"=>"caa8e3dbe406455db1b66e92fd639261", "source"=>{"groupId"=>"Cffcd26bf3de40f390b9495f7a8f74002", "type"=>"group"}, "timestamp"=>1476855387481, "message"=>{"type"=>"text", "id"=>"5079118783402", "text"=>"あああ"}}
 			case data['type']
 			when 'message'
 				message = data['message']['text']
