@@ -8,3 +8,5 @@ gem 'em-websocket-client'
 gem 'websocket-eventmachine-client'
 
 gem 'line-bot-api'
+
+gem 'serialport'
