@@ -58,13 +58,49 @@ EM.run do
 								type: 'text',
 								text: '音声を生成中です。少し時間がかかります'
 							} })
-						when 'エアコンつけて'
+						when 'エアコン'
+							ws.send JSON.generate({ type: 'reply_message', replyToken: data['replyToken'], message: {
+								type: 'template',
+								altText: "エアコンをオンにするには「暖房つけて」「冷房つけて」\nオフにするには「エアコンけして」と発言します",
+								template: {
+									type: 'buttons',
+									thumbnailImageUrl: nil,
+									title: 'エアコン',
+									text: '選択するとエアコンを操作できます',
+									actions: [
+										{
+											type: 'message',
+											label: '暖房',
+											text: '暖房つけて',
+										},
+										{
+											type: 'message',
+											label: '冷房',
+											text: '冷房つけて',
+										},
+										{
+											type: 'message',
+											label: 'オフ',
+											text: 'エアコンけして',
+										}
+									]
+								}
+							} })
+						when '暖房つけて'
 							ws.send JSON.generate({ type: 'reply_message', replyToken: data['replyToken'], message: {
 								type: 'text',
-								text: 'エアコンをオンにします'
+								text: '暖房にします'
 							} })
 							Thread.start do
-								p system('ir.rb', 'aircon_on')
+								p system('ir.rb', 'aircon_warm_on')
+							end
+						when '冷房つけて'
+							ws.send JSON.generate({ type: 'reply_message', replyToken: data['replyToken'], message: {
+								type: 'text',
+								text: '冷房にします'
+							} })
+							Thread.start do
+								p system('ir.rb', 'aircon_cool_on')
 							end
 						when 'エアコンけして'
 							ws.send JSON.generate({ type: 'reply_message', replyToken: data['replyToken'], message: {
@@ -74,7 +110,7 @@ EM.run do
 							Thread.start do
 								p system('ir.rb', 'aircon_off')
 							end
-						when '温度'
+						when '室温'
 							temp = @adt7410.calculate_temperature
 							ws.send JSON.generate({ type: 'reply_message', replyToken: data['replyToken'], message: {
 								type: 'text',

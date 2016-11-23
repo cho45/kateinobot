@@ -1,0 +1,5 @@
+# m h  dom mon dow   command
+
+45 6 * * * /home/pi/bin/jsay.sh $(perl /home/pi/bin/weather.pl)
+20 5 * * * logger aircon_on && cd /home/pi/project/kateinobot && ruby aircon-auto.rb
+20 8 * * * logger aircon_off && /home/pi/bin/ir.rb aircon_off
