@@ -11,10 +11,10 @@ require 'i2c/device/adt7410'
 temp = @adt7410.calculate_temperature
 
 case
-when temp < 15
-	p system('ir.rb', 'aircon_warm_on')
+when temp < 25
+	p system('/home/pi/bin/ir.rb', 'aircon_warm_on')
 when temp > 30
-	p system('ir.rb', 'aircon_cool_on')
+	p system('/home/pi/bin/ir.rb', 'aircon_cool_on')
 else
 	warn "nothing to do"
 	# nothing to do
