@@ -3,7 +3,7 @@ require 'pathname'
 require 'logger'
 
 class PluginLoader
-	class StopException < Exception; end
+	attr_accessor :handled
 
 	def initialize(base_module, search_paths: ["plugins"], logger: nil)
 		@base_module = base_module
@@ -29,14 +29,16 @@ class PluginLoader
 					@logger.info "loading #{f}"
 				end
 
+				loader = self
 				mod = Module.new do
-					@@handlers = []
+					@loader = loader
+					@handlers = []
 					def self.handlers
-						@@handlers
+						@handlers
 					end
 
 					def self.stop
-						raise StopException
+						@loader.handled = true
 					end
 				end
 				mod.extend @base_module
@@ -67,14 +69,13 @@ class PluginLoader
 		@logger.info "run... (#{handlers.size} handlers)"
 
 		begin
+			self.handled = false
 			handlers.each do |handler|
 				call = block.call(handler)
 				if call
 					@logger.info "running #{handler.inspect}"
 					begin
 						handler.handle(call)
-					rescue StopException => e
-						raise e
 					rescue Exception => e
 						@logger.error "exception on running #{handler.inspect}"
 						@logger.error "#{e}"
@@ -85,6 +86,10 @@ class PluginLoader
 					end
 				else
 					@logger.info "skipping #{handler.inspect}"
+				end
+				if self.handled
+					@logger.info "stop"
+					break
 				end
 			end
 		rescue StopException

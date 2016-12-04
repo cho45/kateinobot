@@ -13,8 +13,8 @@ class Context
 			true
 		end
 
-		def handle(args)
-			@proc.call(args)
+		def handle(arg)
+			@proc.call(arg)
 		end
 	end
 
@@ -25,10 +25,19 @@ class Context
 			@text = text
 		end
 
+		def handle(arg)
+			@proc.call(arg, @matchdata)
+		end
+
 		def can_handle?(event)
-			event['type'] == 'message' &&
-			event['message']['type'] == 'text' &&
-			@text === event['message']['text']
+			ret = 
+				event['type'] == 'message' &&
+				event['message']['type'] == 'text' &&
+				@text === event['message']['text']
+
+			@matchdata = Regexp.last_match
+
+			ret
 		end
 	end
 
@@ -141,7 +150,7 @@ if __FILE__ == $0
 		'replyToken' => 'reply_token....',
 		'message' => {
 			'type' => 'text',
-			'text' => 'foobar',
+			'text' => 'ステータス',
 		}
 	})
 	@context.handle_event({
@@ -149,8 +158,8 @@ if __FILE__ == $0
 		'replyToken' => 'reply_token....',
 		'message' => {
 			'type' => 'sticker',
-			'packageId' => 4,
-			'stickerId' => 284,
+			'packageId' => '4',
+			'stickerId' => '284',
 		}
 	})
 	@context.handle_event({
