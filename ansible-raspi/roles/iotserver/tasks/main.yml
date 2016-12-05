@@ -57,12 +57,16 @@
     repo: https://github.com/cho45/ruby-i2c-devices.git
     dest: /home/pi/app/ruby-i2c-devices
     version: master
+  become: yes
+  become_user: pi
 
 - name: git clone kateinobot
   git:
     repo: https://github.com/cho45/kateinobot.git
     dest: /home/pi/app/kateinobot
     version: master
+  become: yes
+  become_user: pi
 
 - name: 'install service'
   file:
