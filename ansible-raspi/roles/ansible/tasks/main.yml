@@ -1,0 +1,19 @@
+---
+
+- name: 'setup ansible repos'
+  apt_repository:
+    repo: 'deb http://ppa.launchpad.net/ansible/ansible/ubuntu trusty main'
+    state: present
+
+- name: 'setup ansible dependencies'
+  apt:
+    name: software-properties-common
+    state: present
+
+- name: 'Install ansible'
+  apt:
+    name: ansible
+    state: present
+    # TODO
+    allow_unauthenticated: yes
+

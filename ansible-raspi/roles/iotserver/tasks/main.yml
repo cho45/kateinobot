@@ -24,25 +24,6 @@
     dest: /service
     state: link
 
-
-- name: 'setup ansible repos'
-  apt_repository:
-    repo: 'deb http://ppa.launchpad.net/ansible/ansible/ubuntu trusty main'
-    state: present
-
-- name: 'setup ansible dependencies'
-  apt:
-    name: software-properties-common
-    state: present
-
-- name: 'Install ansible'
-  apt:
-    name: ansible
-    state: present
-    # TODO
-    allow_unauthenticated: yes
-
-
 - name: websocket-eventmachine-client
   gem: name=websocket-eventmachine-client state=present user_install=yes
   become: yes
@@ -74,6 +55,25 @@
 - name: git clone ruby-i2c-devices
   git:
     repo: https://github.com/cho45/ruby-i2c-devices.git
-    dest: /home/pi/project/ruby-i2c-devices
+    dest: /home/pi/app/ruby-i2c-devices
     version: master
+
+- name: git clone kateinobot
+  git:
+    repo: https://github.com/cho45/kateinobot.git
+    dest: /home/pi/app/kateinobot
+    version: master
+
+- name: 'install service'
+  file:
+    src: /home/pi/app/kateinobot/service/iotbotclient
+    dest: /service/iotbotclient
+    state: link
+
+- name: 'install service'
+  file:
+    src: /home/pi/app/kateinobot/service/iotgwconnect
+    dest: /service/iotgwconnect
+    state: link
+
 

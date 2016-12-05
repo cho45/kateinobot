@@ -2,6 +2,7 @@
 - name: Ansible Playbook for setupping IoT gateway on Raspberry Pi
   hosts: raspi
   roles:
+    - ansible
     - iotserver
     - openjtalk
   become: yes
