@@ -1,0 +1,10 @@
+[raspi]
+raspberrypi.local
+
+[raspi:vars]
+ansible_ssh_port=22
+ansible_ssh_user=pi
+ansible_ssh_pass=raspberry
+#ansible_sudo_pass=
+backup=yes
+

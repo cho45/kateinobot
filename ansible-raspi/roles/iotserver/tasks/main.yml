@@ -1,0 +1,79 @@
+---
+
+- name: 'Install git'
+  apt:
+    name: git
+    state: present
+
+- name: 'Install ruby'
+  apt:
+    name: ruby
+    state: present
+
+- name: 'Install daemontools'
+  apt:
+    name: '{{ item }}'
+    state: present
+  with_items:
+    - daemontools
+    - daemontools-run
+
+- name: '/service to /etc/service'
+  file:
+    src: /etc/service
+    dest: /service
+    state: link
+
+
+- name: 'setup ansible repos'
+  apt_repository:
+    repo: 'deb http://ppa.launchpad.net/ansible/ansible/ubuntu trusty main'
+    state: present
+
+- name: 'setup ansible dependencies'
+  apt:
+    name: software-properties-common
+    state: present
+
+- name: 'Install ansible'
+  apt:
+    name: ansible
+    state: present
+    # TODO
+    allow_unauthenticated: yes
+
+
+- name: websocket-eventmachine-client
+  gem: name=websocket-eventmachine-client state=present user_install=yes
+  become: yes
+  become_user: pi
+
+- name: sinatra
+  gem: name=sinatra state=present user_install=yes
+  become: yes
+  become_user: pi
+
+- name: sinatra-contrib
+  gem: name=sinatra-contrib state=present user_install=yes
+  become: yes
+  become_user: pi
+
+- name: erubis
+  gem: name=erubis state=present user_install=yes
+  become: yes
+  become_user: pi
+
+- name: .bashrc
+  copy:
+    src: .bashrc
+    dest: /home/pi/.bashrc
+    owner: pi
+    group: pi
+    mode: 0644
+
+- name: git clone ruby-i2c-devices
+  git:
+    repo: https://github.com/cho45/ruby-i2c-devices.git
+    dest: /home/pi/project/ruby-i2c-devices
+    version: master
+
