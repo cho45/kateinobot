@@ -42,7 +42,7 @@ class PluginLoader
 					end
 				end
 				mod.extend @base_module
-				mod.module_eval(f.read, f.to_s)
+				mod.module_eval(f.read(encoding: Encoding::UTF_8), f.to_s)
 
 				loading << {
 					file: f.to_s,
