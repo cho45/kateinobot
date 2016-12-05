@@ -1,0 +1,8 @@
+#!/bin/sh
+
+exec 2>&1
+cd /home/pi/app/kateinobot/iotgwconnect
+
+exec setuidgid pi \
+	ruby iotgwconnect.rb
+
