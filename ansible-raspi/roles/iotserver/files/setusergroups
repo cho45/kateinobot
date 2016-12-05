@@ -9,19 +9,14 @@ if len(sys.argv) < 3:
     sys.exit(1)
 
 
-try:
-    pw = pwd.getpwnam(sys.argv[1])
-    pw_name = pw[0]
-    pw_uid = pw[2]
-    pw_gid = pw[3]
-    pw_home = pw[5]
+pw = pwd.getpwnam(sys.argv[1])
+pw_name = pw[0]
+pw_uid = pw[2]
+pw_gid = pw[3]
+pw_home = pw[5]
 
-    os.environ['HOME'] = pw_home
-    os.initgroups(pw_name, pw_gid)
-    os.setgid(pw_gid)
-    os.setuid(pw_uid)
-    os.execvp(sys.argv[2], sys.argv[2:])
-
-except KeyError:
-    print >> sys.stderr, 'Unknown user'
-    sys.exit(1)
+os.environ['HOME'] = pw_home
+os.initgroups(pw_name, pw_gid)
+os.setgid(pw_gid)
+os.setuid(pw_uid)
+os.execvp(sys.argv[2], sys.argv[2:])
