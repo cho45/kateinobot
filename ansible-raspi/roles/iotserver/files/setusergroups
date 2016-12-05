@@ -1,36 +1,27 @@
-#! /usr/bin/perl
+#!/usr/bin/python
 
-use POSIX qw(setuid setgid);
-use Unix::Groups qw(setgroups);
+import os
+import sys
+import pwd
 
-die "usage: setusergroups username child\n"
-    unless @ARGV >= 2;
-my $username = shift @ARGV;
+if len(sys.argv) < 3:
+    print >> sys.stderr, 'Usage: setusergroups user program'
+    sys.exit(1)
 
-# get user entry
-my @userent = getpwnam($username)
-    or die "unknown user: $username\n";
 
-# build list of supp. groups
-my @supp_groups;
-while (my @e = getgrent) {
-    if (grep { $_ eq $username } split /\s+/, $e[3]) {
-        push @supp_groups, $e[2];
-    }
-}
+try:
+    pw = pwd.getpwnam(sys.argv[1])
+    pw_name = pw[0]
+    pw_uid = pw[2]
+    pw_gid = pw[3]
+    pw_home = pw[5]
 
-# setgid
-setgid($userent[3])
-    or die "setgid failed:$!";
+    os.environ['HOME'] = pw_home
+    os.initgroups(pw_name, pw_gid)
+    os.setgid(pw_gid)
+    os.setuid(pw_uid)
+    os.execvp(sys.argv[2], sys.argv[2:])
 
-# setgroups!
-setgroups(@supp_groups)
-    or die "setgroups failed:$!";
-
-# setuid
-setuid($userent[2])
-    or die "setuid failed:$!";
-
-# exec
-exec @ARGV
-    or die "failed to exec: $ARGV[0]:$!";
+except KeyError:
+    print >> sys.stderr, 'Unknown user'
+    sys.exit(1)
