@@ -3,5 +3,7 @@
 exec 2>&1
 cd /home/pi/app/kateinobot/iotbotclient
 
+export HOME=/home/pi
+
 exec setuidgid pi \
 	ruby main.rb

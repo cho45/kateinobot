@@ -3,6 +3,8 @@
 exec 2>&1
 cd /home/pi/app/kateinobot/iotgwconnect
 
+export HOME=/home/pi
+
 exec setuidgid pi \
 	ruby iotgwconnect.rb
 
