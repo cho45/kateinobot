@@ -5,5 +5,5 @@ cd /home/pi/app/kateinobot/iotbotclient
 
 export HOME=/home/pi
 
-exec setuidgid pi \
+exec setusergroups pi \
 	ruby main.rb

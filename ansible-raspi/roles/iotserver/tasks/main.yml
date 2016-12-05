@@ -24,6 +24,12 @@
     dest: /service
     state: link
 
+- name: 'install setusergroups'
+  copy:
+    src: setusergroups
+    dest: /usr/local/bin
+    mode: 0755
+
 - name: websocket-eventmachine-client
   gem: name=websocket-eventmachine-client state=present user_install=yes
   become: yes

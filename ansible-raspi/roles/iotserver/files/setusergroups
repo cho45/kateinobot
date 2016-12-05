@@ -1,0 +1,36 @@
+#! /usr/bin/perl
+
+use POSIX qw(setuid setgid);
+use Unix::Groups qw(setgroups);
+
+die "usage: setusergroups username child\n"
+    unless @ARGV >= 2;
+my $username = shift @ARGV;
+
+# get user entry
+my @userent = getpwnam($username)
+    or die "unknown user: $username\n";
+
+# build list of supp. groups
+my @supp_groups;
+while (my @e = getgrent) {
+    if (grep { $_ eq $username } split /\s+/, $e[3]) {
+        push @supp_groups, $e[2];
+    }
+}
+
+# setgid
+setgid($userent[3])
+    or die "setgid failed:$!";
+
+# setgroups!
+setgroups(@supp_groups)
+    or die "setgroups failed:$!";
+
+# setuid
+setuid($userent[2])
+    or die "setuid failed:$!";
+
+# exec
+exec @ARGV
+    or die "failed to exec: $ARGV[0]:$!";
