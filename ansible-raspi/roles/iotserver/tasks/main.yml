@@ -87,3 +87,21 @@
     state: link
 
 
+- name: 'create plugin directory'
+  file:
+    path: /home/pi/.iotbotclient/plugins
+    state: directory
+    owner: pi
+    group: pi
+    mode: 0755
+
+- name: 'install plugins'
+  file:
+    src: /home/pi/app/kateinobot/service/iotbotclient/plugins/{{ item }}
+    dest: /home/pi.iotbotclient/plugins/{{ item }}
+    state: link
+  with_items:
+    - core.rb
+    - jsay.rb
+
+

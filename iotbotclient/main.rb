@@ -4,6 +4,7 @@ require 'websocket-eventmachine-client'
 
 require 'pathname'
 require 'json'
+require 'logger'
 
 require "#{File.absolute_path(File.dirname(__FILE__))}/lib/context.rb"
 
@@ -25,23 +26,25 @@ EM.run do
 	trap("INT")  { stop }
 
 	def connect
-		puts "Connecting"
+		@logger = Logger.new($stdout)
+
+		@logger.info "Connecting"
 		ws = WebSocket::EventMachine::Client.connect(:uri => 'wss://linebot.cho45.stfuawsc.com/websocket', :headers => {'X-Token' => Token.read } )
-		@context = Context.new(ws)
+		@context = Context.new(ws, search_paths: [ File.expand_path("~/.iotbotclient/plugins") ], logger: @logger)
 		@id = 0
 
 		ws.onopen do
-			puts "Connected"
+			@logger.info "Connected"
 		end
 
 		ws.onmessage do |msg, type|
 			return unless type == :text
 			event = JSON.parse(msg)
-			p event
+			@logger.debug event
 
 			if event["id"].nil?
 				if event["error"]
-					p event["error"]
+					@logger.error event["error"]
 					next
 				end
 
@@ -54,7 +57,7 @@ EM.run do
 		end
 
 		ws.onerror do |error|
-			p error
+			@logger.error error
 			sleep 1
 			EM.next_tick {
 				connect
@@ -62,7 +65,7 @@ EM.run do
 		end
 
 		ws.onclose do |code, reason|
-			puts "Disconnected with status code: #{code}"
+			@logger.info "Disconnected with status code: #{code}"
 			sleep 1
 			EM.next_tick {
 				connect

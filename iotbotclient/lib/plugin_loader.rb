@@ -56,7 +56,7 @@ class PluginLoader
 		@loaded = loading
 		@loaded.each do |loaded|
 			loaded[:module].handlers.each do |handler|
-				@logger.info "Loaded: #{loaded[:file]} :: #{handler.inspect}"
+				@logger.debug "Loaded: #{loaded[:file]} :: #{handler.inspect}"
 			end
 		end
 	end

@@ -39,6 +39,7 @@ post "/connect" do
 			<meta name="robots" content="noindex,nofollow,noarchive">
 			<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
 			<form action="" method="post">
+				<p>以下のボタンで続行します</p>
 				<input type="hidden" name="sk" value="<%= $csrf_token %>">
 				<input type="hidden" name="token" value="<%= params['token'] %>">
 				<input type="hidden" name="return" value="<%= params['return'] %>">
