@@ -97,8 +97,8 @@
 
 - name: 'install plugins'
   file:
-    src: /home/pi/app/kateinobot/service/iotbotclient/plugins/{{ item }}
-    dest: /home/pi.iotbotclient/plugins/{{ item }}
+    src: /home/pi/app/kateinobot/iotbotclient/plugins/{{ item }}
+    dest: /home/pi/.iotbotclient/plugins/{{ item }}
     state: link
   with_items:
     - core.rb

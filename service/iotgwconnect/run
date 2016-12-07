@@ -4,6 +4,7 @@ exec 2>&1
 cd /home/pi/app/kateinobot/iotgwconnect
 
 export HOME=/home/pi
+export RACK_ENV=production
 
 exec setusergroups pi \
 	ruby iotgwconnect.rb
