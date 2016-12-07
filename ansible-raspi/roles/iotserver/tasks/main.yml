@@ -104,4 +104,9 @@
     - core.rb
     - jsay.rb
 
+- name: 'restart daemons'
+  command: svc -h /service/{{ item }}
+  with_items:
+    - iotbotclient
+    - iotgwconnect
 
