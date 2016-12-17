@@ -31,21 +31,21 @@ end
 
 on_text('暖房つけて') do
 	Thread.start do
-		p system('ir.rb', 'aircon_warm_on')
+		p system('/home/pi/bin/ir.rb', 'aircon_warm_on')
 	end
 	reply_text('暖房をつけます')
 end
 
 on_text('冷房つけて') do
 	Thread.start do
-		p system('ir.rb', 'aircon_cool_on')
+		p system('/home/pi/bin/ir.rb', 'aircon_cool_on')
 	end
 	reply_text('冷房つけて')
 end
 
 on_text('エアコンけして') do
 	Thread.start do
-		p system('ir.rb', 'aircon_off')
+		p system('/home/pi/bin/ir.rb', 'aircon_off')
 	end
 	reply_text('エアコンをオフにします')
 end
