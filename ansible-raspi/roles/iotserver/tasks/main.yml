@@ -30,18 +30,18 @@
     dest: /usr/local/bin
     mode: 0755
 
-- name: websocket-eventmachine-client
-  gem: name=websocket-eventmachine-client state=present user_install=yes
+- name: websocket-client-simple
+  gem: name=websocket-client-simple state=present user_install=yes
   become: yes
   become_user: pi
 
 - name: sinatra
-  gem: name=sinatra state=present user_install=yes
+  gem: name=sinatra state=present user_install=yes version=1.4.8
   become: yes
   become_user: pi
 
 - name: sinatra-contrib
-  gem: name=sinatra-contrib state=present user_install=yes
+  gem: name=sinatra-contrib state=present user_install=yes version=1.4.7
   become: yes
   become_user: pi
 
