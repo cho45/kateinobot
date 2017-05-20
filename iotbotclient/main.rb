@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-require 'websocket-eventmachine-client'
+require 'websocket-client-simple'
 
 require 'pathname'
 require 'json'
@@ -21,58 +21,51 @@ while Token.read.nil?
 	sleep 10
 end
 
-EM.run do
-	trap("TERM") { stop }
-	trap("INT")  { stop }
+def connect
+	logger = Logger.new($stdout)
 
-	def connect
-		@logger = Logger.new($stdout)
+	logger.info "Connecting"
+	ws = WebSocket::Client::Simple.connect('wss://linebot.cho45.stfuawsc.com/websocket', :headers => {'X-Token' => Token.read } )
+	context = Context.new(ws, search_paths: [ File.expand_path("~/.iotbotclient/plugins") ], logger: logger)
 
-		@logger.info "Connecting"
-		ws = WebSocket::EventMachine::Client.connect(:uri => 'wss://linebot.cho45.stfuawsc.com/websocket', :headers => {'X-Token' => Token.read } )
-		@context = Context.new(ws, search_paths: [ File.expand_path("~/.iotbotclient/plugins") ], logger: @logger)
-		@id = 0
+	ws.on :open do
+		logger.info "Connected"
+	end
 
-		ws.onopen do
-			@logger.info "Connected"
-		end
+	ws.on :message do |msg|
+		event = JSON.parse(msg.data)
+		p event
+		logger.debug event
 
-		ws.onmessage do |msg, type|
-			return unless type == :text
-			event = JSON.parse(msg)
-			@logger.debug event
-
-			if event["id"].nil?
-				if event["error"]
-					@logger.error event["error"]
-					next
-				end
-
-				case event["result"]["type"]
-				when "webhook"
-					data = event["result"]["data"]
-					@context.handle_event(data)
-				end
+		if event["id"].nil?
+			if event["error"]
+				logger.error event["error"]
+				next
 			end
-		end
 
-		ws.onerror do |error|
-			@logger.error error
-			sleep 1
-			EM.next_tick {
-				connect
-			}
-		end
+			case event["result"]["type"]
+			when "webhook"
+				data = event["result"]["data"]
+				logger.debug "Handle event"
 
-		ws.onclose do |code, reason|
-			@logger.info "Disconnected with status code: #{code}"
-			sleep 1
-			EM.next_tick {
-				connect
-			}
+				context.handle_event(data)
+			end
 		end
 	end
 
-	connect
+	ws.on :error do |error|
+		logger.error error
+		sleep 1
+		connect
+	end
+
+	ws.on :close do |code|
+		logger.info "Disconnected with status code: #{code}"
+		sleep 1
+		connect
+	end
 end
 
+connect
+
+sleep

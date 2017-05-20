@@ -131,6 +131,7 @@ class Context
 			method: method,
 			params: params,
 		})
+		p :request, json
 		@ws.send json
 	end
 end
