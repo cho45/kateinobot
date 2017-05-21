@@ -21,7 +21,9 @@ while Token.read.nil?
 	sleep 10
 end
 
-def connect
+ws = nil
+
+connect = lambda do
 	logger = Logger.new($stdout)
 
 	logger.info "Connecting"
@@ -33,6 +35,7 @@ def connect
 	end
 
 	ws.on :message do |msg|
+		next unless msg.type == :text
 		event = JSON.parse(msg.data)
 		p event
 		logger.debug event
@@ -56,16 +59,21 @@ def connect
 	ws.on :error do |error|
 		logger.error error
 		sleep 1
-		connect
+		connect.()
 	end
 
 	ws.on :close do |code|
 		logger.info "Disconnected with status code: #{code}"
 		sleep 1
-		connect
+		connect.()
 	end
+
+	nil
 end
 
-connect
+connect.()
 
-sleep
+loop do
+	ws.send("0", type: :ping) if ws
+	sleep 1
+end
