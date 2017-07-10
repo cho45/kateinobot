@@ -40,7 +40,7 @@ on_text('冷房つけて') do
 	Thread.start do
 		p system('/home/pi/bin/ir.rb', 'aircon_cool_on')
 	end
-	reply_text('冷房つけて')
+	reply_text('冷房つけます')
 end
 
 on_text('エアコンけして') do
